@@ -21,8 +21,8 @@ playerY = 3
 
 for i in range(len(maze)):
     for j in range(len(maze[i])):
-        if maze[i][j]==" ":
-            print(random.choice(enemy))
+        if maze[i][j]=="X":
+            maze[i][j]="x"
 
 
 
@@ -63,3 +63,16 @@ while True:
 
         break
 
+# while True:
+#     playerName = input("What's the name of our hero(3 Char. Min.): ")
+#     valid=True
+#     char= []
+#     for i in playerName:
+#         char.append(i)
+#     for j in char:
+#         if j.isnumeric():
+#             valid=False
+#     break
+# print(playerName)
+# print(valid)
+# print(char)
