@@ -1,6 +1,7 @@
 import random
 import operator
 
+#GLOBALS
 def initGlobals():
     global playerName
     global con
@@ -57,6 +58,9 @@ def initGlobals():
             "kick rocks"]
 
 
+
+
+#DISPLAY AND MOVEMENT
 def display():
     global playerX
     global playerY
@@ -70,7 +74,7 @@ def display():
                 maze[i][j] = "x"
 
     #marks current player position.
-    maze[playerY][playerX] = "X"
+    maze[playerX][playerY] = "X"
 
     #TODO: take out this T replace. It's just for in development.
     maze[treasureX][treasureY]= "T"
@@ -121,13 +125,13 @@ def movePlayer(move):
     #Implements the move returned by getMovePlayer. Decrements turns remaining.
 
     if move == "w":
-        playerY -=1
+        playerX -=1
     elif move == "a":
-        playerX-=1
+        playerY-=1
     elif move =="d":
-        playerX += 1
+        playerY += 1
     elif move=="s":
-        playerY +=1
+        playerX +=1
     elif move== "h" or move=="help":
         help()
         getMovePlayer()
@@ -137,11 +141,15 @@ def movePlayer(move):
         print("Uh oh! You stepped in lava!")
         dead= True
 
+
+
+
+#ROOMS
 def newRoom():
     #When a player gets to a new room, this will check if they're in the treasure room.
     #If not, then it will return a random choice from the enemy list.
     global hasTreasure
-    if maze[playerY][playerX]==maze[treasureX][treasureY]:
+    if maze[playerX][playerY]==maze[treasureX][treasureY]:
         print("YOU WON!")
         hasTreasure=True
     else:
@@ -220,12 +228,95 @@ def roomTwo():
             break
         else:
             ctr+=1
-            print("NO")
+            print(f"{random.choice(taunt)}!\n")
     if ctr==(3+con):
         return True
 
 def roomThree():
-    print("Room 3")
+    global intel
+    global con
+
+    hintChance=0
+
+
+#PROBLEMS/HINTS/ANSWER
+    problems = [
+        # 1
+        "On which line is the problem with the following python code:\n"
+        "1| i=0\n"
+        "2| if(i<3);\n"
+        "3|     print(i)\n"   
+        "4|     i+=1\n",
+        # 2
+        "1| lst=iter(['Red','Blue','Green','Orange'])\n"
+        "2| x=next(lst)\n"
+        "3| x=next(lst)\n"
+        "4| print(x)\n"
+        "\n"
+        "What prints for 'x'?\n"
+        "1) Red\n"
+        "2) Blue\n"
+        "3) Green\n"
+        "4) Orange\n",
+        # 3
+        "This or that"
+    ]
+
+    hints = [
+        # 1
+        "*Intelligence: I don't think it's line 4.*",
+        # 2
+        "*Intelligence: Not Red.*",
+        # 3
+        "that"
+    ]
+
+    answer = [
+        # 1
+        2,
+        # 2
+        2,
+        # 3
+        1
+    ]
+
+
+#MATH
+    which = random.randint(0, (len(problems) - 1))
+    if intel > 0:
+        hintChance = (random.randint(1, 5) + intel)
+
+#WELCOME TO ROOM THREE
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    print(f"Welcome to the jungle, {playerName}! You'll never beat my dastardly quiz game! \n")
+
+#PRINT QUESTION/HINT
+    print(f"{problems[which]}")
+    if hintChance >=5:
+        print(f"{hints[which]}")
+
+#GET GUESS
+    ctr=0
+    while ctr<(3+con):
+        print(f"You have {(3 + con) - ctr} tries remaining.")
+        try:
+            guess:int= int(input("Enter: "))
+        except:
+            print("You fool! Answer in the form of a number. ")
+            continue
+
+
+#CHECK ANSWER
+        if guess == answer[which]:
+            print(f"{(random.choice(congrat)).capitalize()}! Go on your way adventurer.")
+            print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+            break
+        else:
+            print(f"{random.choice(taunt)}!\n")
+            ctr+=1
+    if ctr==(3+con):
+        return True
+
 
 def roomFour():
     # room three is a level up room!!! or maybe
@@ -242,6 +333,8 @@ def roomBoss():
 
 
 
+
+#PAUSE MENU AND CC
 def showInstructions():
     up="W"
     left = "A"
@@ -258,7 +351,6 @@ def showInstructions():
     print(f"        {down:^7}")
     print("\n")
     print("Don't step in the lava(#)!")
-
 def help():
     global turnsRemaining
     global con
@@ -325,20 +417,24 @@ def getPlayerClass():
         luck +=1
 
 
+
+
+#GAME LOOPS
 def gameLoop():
     global dead
     #The game itself will run as long as the player doesn't have the treasure,
-    #isn't dead, and has turns remaining. The player could find the treasure
+    #isn't dead, and has turns remaining.
 
     while hasTreasure==False and dead==None and turnsRemaining>0:
         display()
         move=getMovePlayer()
         movePlayer(move)
 
+
         #If the element of the new square is blank(No X for where they've been,
         #and no T for treasure, call newRoom() to generate challenge.
         #TODO: for some reason its still calling newRoom() if theres an X in the position.
-        if " " in maze[playerX][playerY] or maze[playerX][playerY]== "T":
+        if maze[playerX][playerY]==" " or maze[playerX][playerY]== "T":
             challenge=newRoom()
             if challenge==1:
                 dead=roomOne()
@@ -353,11 +449,10 @@ def gameLoop():
     if dead==True:
         print("\n~~~~~~YOU DIED~~~~~~\n")
     elif turnsRemaining==0:
-        print(f"Womp womp! You ran out of turns.")
+        print(f"Womp womp! You ran out of turns.\n"
+              f"~~~~~~YOU DIED~~~~~~")
     elif hasTreasure==True:
         print("That's amazing! You win!")
-
-
 
 def startGame():
     #Start Screen
@@ -368,7 +463,6 @@ def startGame():
     print("Great! Let's begin :D\n")
     gameLoop()
 
-
 def main():
     while True:
         startGame()
@@ -377,4 +471,5 @@ def main():
             continue
         else:
             break
+
 main()
