@@ -1,4 +1,5 @@
 import random
+import time
 import operator
 
 #GLOBALS
@@ -19,6 +20,7 @@ def initGlobals():
     global enemy
     global congrat
     global taunt
+    global art
 
     playerName = ""
     dead= None
@@ -52,12 +54,22 @@ def initGlobals():
         ["#","#","#","#","#","#","#"],
     ]
 
-    congrat=["lucky","Amazing","You did it","Fantastic","Smart and handsome","Big brain moves","No one likes a showoff"]
+    congrat=["lucky","Amazing","You did it","Fantastic","Smart and handsome","Big brain moves","No one likes a showoff","you're killing it brother","Anybody want a peanut"]
     taunt= ["Idiot","Dum dummm","You ARE the weakest link","Your father smells of elderberries",
             "Boo, I'm booing you","better luck next time","mwahahaha", "you have to be tired of failing by now",
             "kick rocks"]
 
+    art = (r"""
 
+     _______  __          ___   ____    ____  ______   .______     .___________.  ______   ____    __    ____ .__   __. 
+    |   ____||  |        /   \  \   \  /   / /  __  \  |   _  \    |           | /  __  \  \   \  /  \  /   / |  \ |  | 
+    |  |__   |  |       /  ^  \  \   \/   / |  |  |  | |  |_)  |   `---|  |----`|  |  |  |  \   \/    \/   /  |   \|  | 
+    |   __|  |  |      /  /_\  \  \      /  |  |  |  | |      /        |  |     |  |  |  |   \            /   |  . `  | 
+    |  |     |  `----./  _____  \  \    /   |  `--'  | |  |\  \----.   |  |     |  `--'  |    \    /\    /    |  |\   | 
+    |__|     |_______/__/     \__\  \__/     \______/  | _| `._____|   |__|      \______/      \__/  \__/     |__| \__| 
+
+
+    """)
 
 
 #DISPLAY AND MOVEMENT
@@ -151,7 +163,7 @@ def newRoom():
     global hasTreasure
     if maze[playerX][playerY]==maze[treasureX][treasureY]:
         print("YOU WON!")
-        hasTreasure=True
+        hasTreasure=roomBoss()
     else:
         return random.randint(1,5)
 
@@ -166,13 +178,13 @@ def roomOne():
 
     print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
     print("Room 1")
-    print(f"{playerName.title()}, I've been waiting.")
+    print(f"{playerName.title()}, I've been waiting.\n")
 
     ctr= 0
     ordinal= ["first","second","third","fourth","fifth","sixth","seventh","eighth","ninth","tenth"]
     x = random.randint(1,5)
     while ctr<(3+con):
-        print(x)
+
         try:
             guess:int = int(input(f"Guess a number between 1 and 5!\n"
                                   f"You have {(3+con)-ctr} guesses remaining.\n"
@@ -182,7 +194,7 @@ def roomOne():
             print("Ya dingus, that's not a number!\n")
             continue
         if guess==x or (guess-luck)<= x <=(guess+luck):
-            print(f"{(random.choice(congrat)).capitalize()}! Go on your way adventurer. ")
+            print(f"{(random.choice(congrat)).capitalize()}! Go on your way {playerName}. ")
             print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
             break
 
@@ -223,7 +235,7 @@ def roomTwo():
             print("No letters, only numbers allowed.\n")
             continue
         if z==(operation[what](x,y)):
-            print(f"{(random.choice(congrat)).capitalize()}! Go on your way adventurer.")
+            print(f"{(random.choice(congrat)).capitalize()}! Go on your way {playerName}.")
             print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
             break
         else:
@@ -308,7 +320,7 @@ def roomThree():
 
 #CHECK ANSWER
         if guess == answer[which]:
-            print(f"{(random.choice(congrat)).capitalize()}! Go on your way adventurer.")
+            print(f"{(random.choice(congrat)).capitalize()}! Go on your way {playerName}.")
             print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
             break
         else:
@@ -319,8 +331,7 @@ def roomThree():
 
 
 def roomFour():
-    # room three is a level up room!!! or maybe
-    # TODO: implement heal?
+    # room three is a level up room!
     print("Room 4")
     getPlayerClass()
 
@@ -329,7 +340,9 @@ def roomFive():
     print("Hmmmm.... This room seems safe.")
 
 def roomBoss():
-    pass
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    print("Boss Room!")
+    return True
 
 
 
@@ -344,7 +357,8 @@ def showInstructions():
     # TODO: add explanaition of what con, dex, int do.
     #Initial print at start game.
     print("Welcome to Dungeons, Diners, and Dives")
-    print("In this immersive simulation you'll be looking for the lost treasure.")
+    print("In this immersive simulation you'll have 20 turns to look for the lost treasure.")
+    print("On the menu screen, type 'help' or 'h' to see how many turns you have left along with any stats\n you've accumulated on your run.")
     print("Controls: ")
     print(f"        {up: ^7}")
     print(f"        {left:-<3}+{right:->3}")
@@ -424,6 +438,15 @@ def gameLoop():
     global dead
     #The game itself will run as long as the player doesn't have the treasure,
     #isn't dead, and has turns remaining.
+    print(f"Come")
+    time.sleep(.75)
+    print("   on")
+    time.sleep(.75)
+    print("     down")
+    time.sleep(.75)
+    print("         to")
+    time.sleep(.75)
+    print(art)
 
     while hasTreasure==False and dead==None and turnsRemaining>0:
         display()
@@ -432,9 +455,9 @@ def gameLoop():
 
 
         #If the element of the new square is blank(No X for where they've been,
-        #and no T for treasure, call newRoom() to generate challenge.
-        #TODO: for some reason its still calling newRoom() if theres an X in the position.
-        if maze[playerX][playerY]==" " or maze[playerX][playerY]== "T":
+        #call newRoom() to generate challenge.
+
+        if maze[playerX][playerY]==" " or maze[playerX][playerY]== maze[treasureX][treasureY]:
             challenge=newRoom()
             if challenge==1:
                 dead=roomOne()
