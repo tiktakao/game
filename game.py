@@ -271,7 +271,15 @@ def roomThree():
         "3) Green\n"
         "4) Orange\n",
         # 3
-        "This or that"
+        "What will print to terminal? \n"
+        "1| for _ in range(3):\n"
+        "2|     print('meow', end='')\n"
+        "\n"
+        "1) meow meow meow\n"
+        "2) meow\n"
+        "   meow\n"
+        "   meow"
+
     ]
 
     hints = [
@@ -280,7 +288,7 @@ def roomThree():
         # 2
         "*Intelligence: Not Red.*",
         # 3
-        "that"
+        r"""*Intelligence: the default of end=\n which starts a new line.*"""
     ]
 
     answer = [
