@@ -348,9 +348,57 @@ def roomFive():
     print("Hmmmm.... This room seems safe.")
 
 def roomBoss():
+    global dead
+
     print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
-    print("Boss Room!")
-    return True
+    print("From a shadowy corner of the room steps the dungeon boss, Guy Fieri.")
+    print("'Hey dude! Looks like you've found your way to flavortown.'")
+    print("'Beat me in rock paper scissors for the zesty treasure. First to three wins, hombre!'")
+    print("And then Guy Fieri does a kick flip.\n")
+
+    ctr=0
+    plyrScore=0
+    guyScore=0
+
+    rps=["rock","paper","scissors"]
+
+
+    while plyrScore<3 and guyScore<3:
+
+
+        choice:str= input("Rock, paper, or scissors? ").lower()
+        if choice not in rps:
+            print("Pick rock, paper or scissors.")
+            continue
+
+        guyChoice= random.choice(rps)
+        print(f"{guyChoice.capitalize()}")
+
+        if choice=="rock" and guyChoice=="scissors":
+            print(f"{random.choice(congrat).capitalize()}!")
+            print(f"Guy chose {guyChoice.capitalize()} and you chose {choice.capitalize()}. You win!")
+            plyrScore += 1
+        elif choice=="paper" and guyChoice=="rock":
+            print(f"{random.choice(congrat).capitalize()}!")
+            print(f"Guy chose {guyChoice.capitalize()} and you chose {choice.capitalize()}. You win!")
+            plyrScore += 1
+        elif choice=="scissors" and guyChoice=="paper":
+            print(f"{random.choice(congrat).capitalize()}!")
+            print(f"Guy chose {guyChoice.capitalize()} and you chose {choice.capitalize()}. You win!")
+            plyrScore +=1
+        elif choice==guyChoice:
+            print("It's a tie.")
+            continue
+        else:
+            print(f"{random.choice(taunt).capitalize()}!")
+            print(f"Guy chose {guyChoice.capitalize()} and you chose {choice.capitalize()}. You lose!")
+            guyScore +=1
+
+
+    if plyrScore>=3:
+        return True
+    else:
+        dead=True
 
 
 
@@ -362,7 +410,7 @@ def showInstructions():
     right = "D"
     down = "S"
 
-    # TODO: add explanaition of what con, dex, int do.
+    # TODO: add explanation of what con, dex, int do.
     #Initial print at start game.
     print("Welcome to Dungeons, Diners, and Dives")
     print("In this immersive simulation you'll have 20 turns to look for the lost treasure.")
@@ -372,7 +420,11 @@ def showInstructions():
     print(f"        {left:-<3}+{right:->3}")
     print(f"        {down:^7}")
     print("\n")
-    print("Don't step in the lava(#)!")
+    print("Rules:")
+    print("- Look for the treasure")
+    print("- Don't step in the lava(#)!")
+    print("- If the turn counter runs out, you lose.")
+
 def help():
     global turnsRemaining
     global con
@@ -382,7 +434,7 @@ def help():
 
     print("\nTake a rest adventurer.")
     print(f"     Turns Remaining: {turnsRemaining}")
-    print(f"     Health: to see player stats")
+
     print("")
     print(f"Stats:\n"
           f"    Constitution: {con}\n"
@@ -418,7 +470,7 @@ def getPlayerClass():
         global con
         global intel
         global luck
-        #TODO subclasses?
+
         try:
             playerClass= int(input(f"\nIs {playerName.title()} taking a level in: \n    1. Fighter(+1 Con)\n    2. Wizard(+1 Int)\n    3. Thief(+1 Luck)\nEnter 1/2/3: "))
 
