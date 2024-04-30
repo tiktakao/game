@@ -54,7 +54,7 @@ def initGlobals():
         ["#","#","#","#","#","#","#"],
     ]
 
-    congrat=["lucky","Amazing","You did it","Fantastic","Smart and handsome","Big brain moves","No one likes a showoff","you're killing it brother","Anybody want a peanut"]
+    congrat=["lucky","Amazing","You did it","Fantastic","Smart and handsome","Big brain moves","No one likes a showoff","you're killing it brother","Anybody want a peanut","pythonic","mathematical"]
     taunt= ["Idiot","Dum dummm","You ARE the weakest link","Your father smells of elderberries",
             "Boo, I'm booing you","better luck next time","mwahahaha", "you have to be tired of failing by now",
             "kick rocks"]
@@ -89,7 +89,7 @@ def display():
     maze[playerX][playerY] = "X"
 
     #TODO: take out this T replace. It's just for in development.
-    maze[treasureX][treasureY]= "T"
+    maze[treasureX][treasureY]= " "
 
     #has to loop because map is a list of lists.
     for i in maze:
@@ -161,8 +161,8 @@ def newRoom():
     #When a player gets to a new room, this will check if they're in the treasure room.
     #If not, then it will return a random choice from the enemy list.
     global hasTreasure
-    if maze[playerX][playerY]==maze[treasureX][treasureY]:
-        print("YOU WON!")
+    if (playerX,playerY)==(treasureX,treasureY):
+        print("YOU FOUND THE TREASURE ROOM!")
         hasTreasure=roomBoss()
     else:
         return random.randint(1,5)
@@ -206,6 +206,7 @@ def roomOne():
 
 def roomTwo():
     #Math game. add,sub, mult
+    #Had to import operator https://docs.python.org/3/library/operator.html
     global luck
     global con
     global congrat
@@ -372,7 +373,7 @@ def roomBoss():
             continue
 
         guyChoice= random.choice(rps)
-        print(f"{guyChoice.capitalize()}")
+        print(f"Guy picked {guyChoice.capitalize()}.")
 
         if choice=="rock" and guyChoice=="scissors":
             print(f"{random.choice(congrat).capitalize()}!")
@@ -393,8 +394,11 @@ def roomBoss():
             print(f"{random.choice(taunt).capitalize()}!")
             print(f"Guy chose {guyChoice.capitalize()} and you chose {choice.capitalize()}. You lose!")
             guyScore +=1
-
-
+        print("\n%%%%%%%%%%%%%%%%%%%%%")
+        print(f"{playerName} Score: {plyrScore}")
+        print(f"Guy Score: {guyScore}")
+        print("%%%%%%%%%%%%%%%%%%%%%\n")
+    print("^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
     if plyrScore>=3:
         return True
     else:
@@ -412,9 +416,9 @@ def showInstructions():
 
     # TODO: add explanation of what con, dex, int do.
     #Initial print at start game.
-    print("Welcome to Dungeons, Diners, and Dives")
+    print("Welcome to Dungeons, Diners, and Dives\n")
     print("In this immersive simulation you'll have 20 turns to look for the lost treasure.")
-    print("On the menu screen, type 'help' or 'h' to see how many turns you have left along with any stats\n you've accumulated on your run.")
+    print("On the map screen, type 'help' or 'h' to see how many turns you have left along with any stats\nyou've accumulated on your run.\n")
     print("Controls: ")
     print(f"        {up: ^7}")
     print(f"        {left:-<3}+{right:->3}")
